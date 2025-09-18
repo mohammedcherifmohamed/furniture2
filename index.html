@@ -110,6 +110,35 @@
         .cart-pulse {
             animation: pulse 0.5s ease-in-out;
         }
+        
+        /* Mobile menu styles */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* Page transition */
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* Fix for cart modal on mobile */
+        @media (max-width: 768px) {
+            .cart-modal-content {
+                width: 85% !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-light font-arabic">
@@ -118,17 +147,17 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
                 <h1 class="text-2xl font-bold text-primary">أثاثي</h1>
-                <span class="text-sm text-accent mr-2">| متجر الأثاث المنزلي</span>
+                <span class="text-sm text-accent mr-2 hidden md:inline">| متجر الأثاث المنزلي</span>
             </div>
             
             <nav class="hidden md:block">
                 <ul class="flex space-x-8 space-x-reverse">
-                    <li><a href="#" class="text-primary hover:text-accent font-medium">الرئيسية</a></li>
-                    <li><a href="#" class="text-primary hover:text-accent font-medium">المطابخ</a></li>
-                    <li><a href="#" class="text-primary hover:text-accent font-medium">غرف النوم</a></li>
-                    <li><a href="#" class="text-primary hover:text-accent font-medium">غرف الجلوس</a></li>
-                    <li><a href="#" class="text-primary hover:text-accent font-medium">المكاتب</a></li>
-                    <li><a href="#" class="text-primary hover:text-accent font-medium">تواصل معنا</a></li>
+                    <li><a href="#" class="nav-link text-primary hover:text-accent font-medium" data-page="home">الرئيسية</a></li>
+                    <li><a href="#" class="nav-link text-primary hover:text-accent font-medium" data-page="kitchens">المطابخ</a></li>
+                    <li><a href="#" class="nav-link text-primary hover:text-accent font-medium" data-page="bedrooms">غرف النوم</a></li>
+                    <li><a href="#" class="nav-link text-primary hover:text-accent font-medium" data-page="living-rooms">غرف الجلوس</a></li>
+                    <li><a href="#" class="nav-link text-primary hover:text-accent font-medium" data-page="offices">المكاتب</a></li>
+                    <li><a href="#" class="nav-link text-primary hover:text-accent font-medium" data-page="contact">تواصل معنا</a></li>
                 </ul>
             </nav>
             
@@ -138,155 +167,288 @@
                     <span class="absolute -top-2 -right-2 bg-accent text-white rounded-full w-5 h-5 flex items-center justify-center text-xs" id="cartCount">0</span>
                 </button>
                 
-                <button class="md:hidden text-primary ml-4">
+                <button class="md:hidden text-primary ml-4" id="mobileMenuButton">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section py-20 text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6 fade-in">أثاث منزلي راقي لعائلة عصرية</h2>
-            <p class="text-xl mb-8 max-w-2xl mx-auto fade-in">اكتشف مجموعتنا الفريدة من قطع الأثاث المصممة بدقة لتناسب ذوقك الرفيع وتلبي جميع احتياجات منزلك</p>
-            <button class="bg-accent hover:bg-secondary text-white py-3 px-8 rounded-full text-lg font-medium transition duration-300 transform hover:scale-105 fade-in">
-                تصفح المنتجات
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed inset-0 bg-primary bg-opacity-95 z-50 md:hidden" id="mobileMenu">
+        <div class="flex justify-end p-6">
+            <button class="text-white text-2xl" id="closeMobileMenu">
+                <i class="fas fa-times"></i>
             </button>
         </div>
-    </section>
+        <ul class="flex flex-col items-center space-y-8 mt-16">
+            <li><a href="#" class="nav-link text-white text-xl font-medium" data-page="home">الرئيسية</a></li>
+            <li><a href="#" class="nav-link text-white text-xl font-medium" data-page="kitchens">المطابخ</a></li>
+            <li><a href="#" class="nav-link text-white text-xl font-medium" data-page="bedrooms">غرف النوم</a></li>
+            <li><a href="#" class="nav-link text-white text-xl font-medium" data-page="living-rooms">غرف الجلوس</a></li>
+            <li><a href="#" class="nav-link text-white text-xl font-medium" data-page="offices">المكاتب</a></li>
+            <li><a href="#" class="nav-link text-white text-xl font-medium" data-page="contact">تواصل معنا</a></li>
+        </ul>
+    </div>
 
-    <!-- Categories Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-primary mb-12">فئات المنتجات</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Kitchen Category -->
-                <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
-                    <div class="h-48 overflow-hidden">
-                        <img src="kitchen.jpeg" alt="مطابخ" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6 text-center">
-                        <h3 class="text-xl font-bold text-primary mb-3">المطابخ</h3>
-                        <p class="text-dark mb-4">تصاميم عصرية وكلاسيكية لمطابخ تناسب مساحتك</p>
-                        <button class="bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300">
-                            تصفح المنتجات
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Bedrooms Category -->
-                <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="غرف النوم" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6 text-center">
-                        <h3 class="text-xl font-bold text-primary mb-3">غرف النوم</h3>
-                        <p class="text-dark mb-4">غرف نوم مريحة وأنيقة لراحة مثالية</p>
-                        <button class="bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300">
-                            تصفح المنتجات
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Living Rooms Category -->
-                <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="غرف الجلوس" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6 text-center">
-                        <h3 class="text-xl font-bold text-primary mb-3">غرف الجلوس</h3>
-                        <p class="text-dark mb-4">قطع أثاث فاخرة لغرف جلوس مريحة وجذابة</p>
-                        <button class="bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300">
-                            تصفح المنتجات
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Offices Category -->
-                <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1449247709967-d4461a6a6103?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="المكاتب" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6 text-center">
-                        <h3 class="text-xl font-bold text-primary mb-3">المكاتب</h3>
-                        <p class="text-dark mb-4">تصاميم عملية وعصرية لمكاتب منزلية ومهنية</p>
-                        <button class="bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300">
-                            تصفح المنتجات
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="py-16 bg-light">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-primary mb-4">منتجات مميزة</h2>
-            <p class="text-center text-dark mb-12">اكتشف أحدث تصاميمنا والأكثر طلباً</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Product 1 -->
-                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
-                    <div class="h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="كنبة فاخرة" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-primary mb-2">كنبة فاخرة من الجلد</h3>
-                        <p class="text-dark mb-4">كنبة فاخرة مصنوعة من أجود أنواع الجلد الطبيعي بتصميم عصري</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xl font-bold text-accent">125,000 د.ج</span>
-                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(1, 'كنبة فاخرة من الجلد', 125000, 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
-                                إضافة إلى السلة
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 2 -->
-                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
-                    <div class="h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="طاولة طعام" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-primary mb-2">طاولة طعام عصرية</h3>
-                        <p class="text-dark mb-4">طاولة طعام مصنوعة من خشب الزان بتصميم عصري يتسع لـ 6 أشخاص</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xl font-bold text-accent">89,000 د.ج</span>
-                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(2, 'طاولة طعام عصرية', 89000, 'https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
-                                إضافة إلى السلة
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 3 -->
-                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
-                    <div class="h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="خزانة ملابس" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-primary mb-2">خزانة ملابس فاخرة</h3>
-                        <p class="text-dark mb-4">خزانة ملابس كبيرة بثلاث أبواب مصنوعة من الخشب عالي الجودة</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xl font-bold text-accent">145,000 د.ج</span>
-                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(3, 'خزانة ملابس فاخرة', 145000, 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
-                                إضافة إلى السلة
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-12">
-                <button class="bg-accent hover:bg-secondary text-white py-3 px-8 rounded-full text-lg font-medium transition duration-300">
-                    عرض جميع المنتجات
+    <!-- Home Page -->
+    <div id="home-page" class="page active">
+        <!-- Hero Section -->
+        <section class="hero-section py-20 text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 fade-in">أثاث منزلي راقي لعائلة عصرية</h2>
+                <p class="text-xl mb-8 max-w-2xl mx-auto fade-in">اكتشف مجموعتنا الفريدة من قطع الأثاث المصممة بدقة لتناسب ذوقك الرفيع وتلبي جميع احتياجات منزلك</p>
+                <button class="bg-accent hover:bg-secondary text-white py-3 px-8 rounded-full text-lg font-medium transition duration-300 transform hover:scale-105 fade-in">
+                    تصفح المنتجات
                 </button>
             </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-primary mb-12">فئات المنتجات</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Kitchen Category -->
+                    <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مطابخ" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-bold text-primary mb-3">المطابخ</h3>
+                            <p class="text-dark mb-4">تصاميم عصرية وكلاسيكية لمطابخ تناسب مساحتك</p>
+                            <button class="category-btn bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300" data-category="kitchens">
+                                تصفح المنتجات
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Bedrooms Category -->
+                    <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="غرف النوم" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-bold text-primary mb-3">غرف النوم</h3>
+                            <p class="text-dark mb-4">غرف نوم مريحة وأنيقة لراحة مثالية</p>
+                            <button class="category-btn bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300" data-category="bedrooms">
+                                تصفح المنتجات
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Living Rooms Category -->
+                    <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="غرف الجلوس" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-bold text-primary mb-3">غرف الجلوس</h3>
+                            <p class="text-dark mb-4">قطع أثاث فاخرة لغرف جلوس مريحة وجذابة</p>
+                            <button class="category-btn bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300" data-category="living-rooms">
+                                تصفح المنتجات
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Offices Category -->
+                    <div class="category-card bg-light rounded-lg overflow-hidden shadow-md">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1449247709967-d4461a6a6103?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="المكاتب" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-bold text-primary mb-3">المكاتب</h3>
+                            <p class="text-dark mb-4">تصاميم عملية وعصرية لمكاتب منزلية ومهنية</p>
+                            <button class="category-btn bg-primary hover:bg-accent text-white py-2 px-6 rounded-full transition duration-300" data-category="offices">
+                                تصفح المنتجات
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="py-16 bg-light">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-primary mb-4">منتجات مميزة</h2>
+                <p class="text-center text-dark mb-12">اكتشف أحدث تصاميمنا والأكثر طلباً</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Product 1 -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                        <div class="h-56 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="كنبة فاخرة" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-primary mb-2">كنبة فاخرة من الجلد</h3>
+                            <p class="text-dark mb-4">كنبة فاخرة مصنوعة من أجود أنواع الجلد الطبيعي بتصميم عصري</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl font-bold text-accent">125,000 د.ج</span>
+                                <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(1, 'كنبة فاخرة من الجلد', 125000, 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                    إضافة إلى السلة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                        <div class="h-56 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="طاولة طعام" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-primary mb-2">طاولة طعام عصرية</h3>
+                            <p class="text-dark mb-4">طاولة طعام مصنوعة من خشب الزان بتصميم عصري يتسع لـ 6 أشخاص</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl font-bold text-accent">89,000 د.ج</span>
+                                <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(2, 'طاولة طعام عصرية', 89000, 'https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                    إضافة إلى السلة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                        <div class="h-56 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="خزانة ملابس" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-primary mb-2">خزانة ملابس فاخرة</h3>
+                            <p class="text-dark mb-4">خزانة ملابس كبيرة بثلاث أبواب مصنوعة من الخشب عالي الجودة</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl font-bold text-accent">145,000 د.ج</span>
+                                <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(3, 'خزانة ملابس فاخرة', 145000, 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                    إضافة إلى السلة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <button class="bg-accent hover:bg-secondary text-white py-3 px-8 rounded-full text-lg font-medium transition duration-300">
+                        عرض جميع المنتجات
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Category Pages -->
+    <div id="kitchens-page" class="page">
+        <div class="container mx-auto px-4 py-12">
+            <h2 class="text-3xl font-bold text-primary mb-8 text-center">مطابخ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Kitchen Products -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مطبخ حديث" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">مطبخ حديث</h3>
+                        <p class="text-dark mb-4">مطبخ عصري بتصميم أنيق ومساحة تخزين كبيرة</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-accent">220,000 د.ج</span>
+                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(4, 'مطبخ حديث', 220000, 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                إضافة إلى السلة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مطبخ كلاسيكي" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">مطبخ كلاسيكي</h3>
+                        <p class="text-dark mb-4">مطبخ بتصميم كلاسيكي أنيق من الخشب عالي الجودة</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-accent">185,000 د.ج</span>
+                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(5, 'مطبخ كلاسيكي', 185000, 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                إضافة إلى السلة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مطبخ صغير" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">مطبخ صغير</h3>
+                        <p class="text-dark mb-4">مطبخ مدمج مثالي للمساحات الصغيرة</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-accent">135,000 د.ج</span>
+                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(6, 'مطبخ صغير', 135000, 'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                إضافة إلى السلة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
+
+    <div id="bedrooms-page" class="page">
+        <div class="container mx-auto px-4 py-12">
+            <h2 class="text-3xl font-bold text-primary mb-8 text-center">غرف النوم</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Bedroom Products -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="غرفة نوم رئيسية" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">غرفة نوم رئيسية</h3>
+                        <p class="text-dark mb-4">مجموعة غرفة نوم كاملة من السرير وخزانة الملابس</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-accent">320,000 د.ج</span>
+                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(7, 'غرفة نوم رئيسية', 320000, 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                إضافة إلى السلة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="سرير أطفال" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">سرير أطفال</h3>
+                        <p class="text-dark mb-4">سرير أطفال بتصميم مميز وألوان جذابة</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-accent">95,000 د.ج</span>
+                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(8, 'سرير أطفال', 95000, 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                إضافة إلى السلة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1540382796390-295d21a4d2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="غرفة نوم مودرن" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">غرفة نوم مودرن</h3>
+                        <p class="text-dark mb-4">تصميم عصري لغرفة نوم مع سرير منخفض وخزانة ملابس</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-accent">275,000 د.ج</span>
+                            <button class="cart-btn bg-primary text-white py-2 px-4 rounded-lg" onclick="addToCart(9, 'غرفة نوم مودرن', 275000, 'https://images.unsplash.com/photo-1540382796390-295d21a4d2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                                إضافة إلى السلة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-primary text-white py-12">
@@ -306,22 +468,22 @@
                 <div>
                     <h3 class="text-xl font-bold mb-4">روابط سريعة</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-secondary">الرئيسية</a></li>
-                        <li><a href="#" class="hover:text-secondary">من نحن</a></li>
-                        <li><a href="#" class="hover:text-secondary">المنتجات</a></li>
-                        <li><a href="#" class="hover:text-secondary">الشروط والأحكام</a></li>
-                        <li><a href="#" class="hover:text-secondary">سياسة الخصوصية</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="home">الرئيسية</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="kitchens">المطابخ</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="bedrooms">غرف النوم</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="living-rooms">غرف الجلوس</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="offices">المكاتب</a></li>
                     </ul>
                 </div>
                 
                 <div>
                     <h3 class="text-xl font-bold mb-4">فئات المنتجات</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-secondary">المطابخ</a></li>
-                        <li><a href="#" class="hover:text-secondary">غرف النوم</a></li>
-                        <li><a href="#" class="hover:text-secondary">غرف الجلوس</a></li>
-                        <li><a href="#" class="hover:text-secondary">المكاتب</a></li>
-                        <li><a href="#" class="hover:text-secondary">الإضاءة</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="kitchens">المطابخ</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="bedrooms">غرف النوم</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="living-rooms">غرف الجلوس</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="offices">المكاتب</a></li>
+                        <li><a href="#" class="nav-link hover:text-secondary" data-page="home">الإضاءة</a></li>
                     </ul>
                 </div>
                 
@@ -352,7 +514,8 @@
 
     <!-- Cart Modal -->
     <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="cartModal">
-        <div class="fixed inset-y-0 left-0 max-w-md w-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out -translate-x-full" id="cartPanel">
+        <div class="absolute inset-0" id="cartModalBackdrop"></div>
+        <div class="absolute inset-y-0 left-0 max-w-md w-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out -translate-x-full cart-modal-content" id="cartPanel">
             <div class="h-full flex flex-col">
                 <div class="p-4 bg-primary text-white flex justify-between items-center">
                     <h3 class="text-xl font-bold">سلة التسوق</h3>
@@ -497,6 +660,7 @@
         // Cart modal functionality
         document.getElementById('cartButton').addEventListener('click', openCart);
         document.getElementById('floatingCartButton').addEventListener('click', openCart);
+        document.getElementById('cartModalBackdrop').addEventListener('click', closeCart);
         
         function openCart() {
             document.getElementById('cartModal').classList.remove('hidden');
@@ -515,11 +679,45 @@
             }, 300);
         }
         
-        // Close cart when clicking outside
-        document.getElementById('cartModal').addEventListener('click', function(e) {
-            if (e.target === document.getElementById('cartModal')) {
-                closeCart();
-            }
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show the selected page
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Set up navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage(this.getAttribute('data-page'));
+                
+                // Close mobile menu if open
+                document.getElementById('mobileMenu').classList.remove('open');
+            });
+        });
+        
+        // Set up category buttons
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                showPage(this.getAttribute('data-category'));
+            });
+        });
+        
+        // Mobile menu functionality
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.add('open');
+        });
+        
+        document.getElementById('closeMobileMenu').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.remove('open');
         });
         
         // Fade-in animation on scroll
